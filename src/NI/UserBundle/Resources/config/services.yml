@@ -1,0 +1,4 @@
+services:
+#    ni_user.example:
+#        class: NI\UserBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
