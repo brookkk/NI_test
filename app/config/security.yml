@@ -19,9 +19,13 @@ security:
         main_login:
             pattern: ^/login$
             anonymous: true
+        login:
+            pattern:  ^/api/auth
+            stateless: true
+            anonymous: true
         main:
             pattern: ^/
-            anonymous: true
+            anonymous: false
             provider: main
             form_login:
                 login_path: login
