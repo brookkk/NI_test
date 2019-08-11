@@ -1,0 +1,3 @@
+ni_platform_homepage:
+    path:     /
+    defaults: { _controller: NIPlatformBundle:Default:index }
