@@ -22,15 +22,32 @@ class ProductController extends Controller
     
    /**
      * @Get(
-     *     path = "/product/{id}",
-     *     name = "NI_product_show",
-     *     requirements = {"id"="\d+"}
+     *     path = "/products",
+     *     name = "NI_products_show",
      * )
      */
     public function showProductAction()
     {
-        //return "toto";
-        return $this->json("toto");
+
+        $em= $this  ->getDoctrine()  ->getManager();
+        $repository = $em  ->getRepository('NIPlatformBundle:product');
+        $listProducts = $repository->findAll();
+
+        return $this->productToJson($listProducts);
+    }
+
+    public function productToJson($products)
+    {
+        $json_product = array();
+        foreach ($products  as $product){
+            $json_product[] =  [
+                'id' => $product->getId(),
+                'sku' => $product -> getSku(),
+                'name' => $product->getName(),
+                'user' => $product->getUser()->getUsername()
+            ];
+        }
+        return $json_product;
     }
 
 
