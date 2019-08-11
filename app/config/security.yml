@@ -2,8 +2,12 @@
 # https://symfony.com/doc/current/security.html
 security:
 
+    encoders:
+        NI\UserBundle\Entity\User: sha512
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
+        main:
+            id: fos_user.user_provider.username
         in_memory:
             memory: ~
 
@@ -14,7 +18,17 @@ security:
             security: false
 
         main:
-            anonymous: ~
+            pattern: ^/
+            anonymous: true
+            provider: main
+            form_login:
+                login_path: login
+                check_path: login_check
+            logout:
+                path: logout
+                target: login
+            remember_me:
+                secret: %secret%
             # activate different ways to authenticate
 
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
