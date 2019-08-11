@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="ni_user")
- * @ORM\Entity(repositoryClass="Lit\UserBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="NI\UserBundle\Repository\UserRepository")
  */
 class User extends BaseUser
 {
@@ -27,5 +27,17 @@ class User extends BaseUser
   
 
 
+
+    /**
+     * Set the value of id
+     *
+     * @return  self
+     */ 
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 }
 

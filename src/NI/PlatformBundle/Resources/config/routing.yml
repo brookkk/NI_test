@@ -1,3 +1,8 @@
 ni_platform_homepage:
     path:     /
     defaults: { _controller: NIPlatformBundle:Default:index }
+NI_api:    
+    resource: "@NIPlatformBundle/Controller/ProductController.php"
+    prefix:    /api/
+    defaults: {_format: json}
+    type:     annotation

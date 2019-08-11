@@ -3,6 +3,7 @@
 namespace NI\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use NI\UserBundle\Entity\User as User;
 
 /**
  * product
@@ -34,6 +35,11 @@ class product
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="NI\UserBundle\Entity\User", cascade={"all"}, fetch="EAGER")
+     */
+    private $user;
 
 
     /**
@@ -92,6 +98,24 @@ class product
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get the value of user
+     */ 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @return  self
+     */ 
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 }
 
