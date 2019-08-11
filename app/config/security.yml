@@ -16,7 +16,9 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
+        main_login:
+            pattern: ^/login$
+            anonymous: true
         main:
             pattern: ^/
             anonymous: true
@@ -27,8 +29,6 @@ security:
             logout:
                 path: logout
                 target: login
-            remember_me:
-                secret: %secret%
             # activate different ways to authenticate
 
             # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
