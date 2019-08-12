@@ -71,7 +71,7 @@ class ProductController extends Controller
 
         //$user = new User;
         //$user->setId(1);
-        print_r($data);
+        //print_r($data);
         $product = new Product;
         $product->setSku($data->getSku());
         $product->setName($data->getName());
@@ -95,9 +95,18 @@ class ProductController extends Controller
 
 
 
-
     /**
      * @Rest\Post("/auth")
+     * @Rest\View(StatusCode = 201)
+     */
+    public function authAction(Request $request)
+    {
+        return $this->redirectToRoute('api_login_check', array('request'=>$request));
+    }
+
+
+    /**
+     * @Rest\Post("/auth2")
      * @Rest\View(StatusCode = 201)
      */
     public function authenticateLoginAction(Request $request)
@@ -123,7 +132,7 @@ class ProductController extends Controller
         // on vérifie l'existance d'un user avec l'identifiant "username"
         $bd_user = $this->get('fos_user.user_manager')->findUserByUsername($user_array['username']);
 
-        print_r($bd_user);
+        //print_r($bd_user);
 
         if($bd_user)
         {
@@ -141,9 +150,9 @@ class ProductController extends Controller
         $token = $date->format('YmdHis');
  
         if(!$found)
-            return "user non trouvé";
+            return "user : not found";
         else if(!$good_psw)
-            return "mdp erroné;";
+            return "wrong password";
         else{
             $bd_user->setLastLogin($date);
              //l'objet retour est le "token" + "user trouvé"

@@ -35,3 +35,5 @@ logout:
     path: /logout
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+api_login_check:
+    path: /api/login_check

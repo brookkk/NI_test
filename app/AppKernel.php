@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new NI\UserBundle\NIUserBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new NI\PlatformBundle\NIPlatformBundle(),
+            new Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
