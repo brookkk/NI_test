@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 //use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Request;
-
+use FOS\UserBundle\Model\UserInterface;
 
 class ProductController extends Controller
 {
@@ -28,6 +28,8 @@ class ProductController extends Controller
      */
     public function showProductAction()
     {
+        
+
 
         $em= $this  ->getDoctrine()  ->getManager();
         $repository = $em  ->getRepository('NIPlatformBundle:product');
@@ -35,6 +37,10 @@ class ProductController extends Controller
 
         return $this->productToJson($listProducts);
     }
+
+
+
+    
 
     public function productToJson($products)
     {
@@ -52,10 +58,13 @@ class ProductController extends Controller
 
 
     /**
-     * @Rest\Post("/product")
+     * @Rest\Post("/user/product")
      */
-    public function createAction(Request $request/*Product $product*/)
+    public function createAction(Request $request)
     {
+
+        //$user = $this->get('security.token_storage')->getToken();
+        $user = $this -> getUser();
 
         $prdt = $this->get('serializer')->serialize($request->query, 'json');
 
@@ -63,9 +72,9 @@ class ProductController extends Controller
         
         $em= $this  ->getDoctrine()  ->getManager();
         $repository = $em  ->getRepository('NIUserBundle:User');
-        $user =  $repository->findBy([
+        /*$user =  $repository->findBy([
             'id' => 1 ,
-          ]);
+          ]);*/
 
          // print_r($user[0]);
 
@@ -75,7 +84,7 @@ class ProductController extends Controller
         $product = new Product;
         $product->setSku($data->getSku());
         $product->setName($data->getName());
-        $product->setUser($user[0]);
+        $product->setUser($user);
         //$form = $this->get('form.factory')->create(productType::class, $product);
         //$form->submit($data);
         

@@ -3,7 +3,7 @@
 security:
 
     encoders:
-        NI\UserBundle\Entity\User: sha512
+        NI\UserBundle\Entity\User: plaintext
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
         main:
