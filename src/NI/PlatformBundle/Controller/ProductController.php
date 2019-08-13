@@ -68,8 +68,8 @@ class ProductController extends Controller
         
 
 
-        //return $this->json($this->getUser()->getUsername());
-        return json("testsss");
+        return $this->json($this->getUser()->getUsername());
+        //return json("testsss");
     }
 
     public function productToJson($product)
@@ -115,7 +115,7 @@ class ProductController extends Controller
         $product = new Product;
         $product->setSku($data->getSku());
         $product->setName($data->getName());
-        $product->setUser($user);
+        $product->addUser($user);
         //$form = $this->get('form.factory')->create(productType::class, $product);
         //$form->submit($data);
         
