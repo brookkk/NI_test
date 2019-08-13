@@ -79,29 +79,16 @@ class ProductController extends Controller
     {
         $user = $this->getUser();
 
-        /*$db_user = $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findBy([
-            'id'=>$user->get]
-        );*/
-
-        /*$listProducts= $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findBy([
-            'user'=>$user]
-        );*/
-
-        //print_r($user);
-        return $user->getProducts();
-        //return $this->json($this->getUser()->getUsername());
+       
+        return $this->json($user->getProducts());
     }
 
     public function productToJson($product)
     {
-        /*$user = $this->getDoctrine()->getRepository('NIUserBundle:User')->findBy([
-            'id' => $product->getUser() ,
-          ]);*/
+        
             $json =  array(
-                'id' => $product->getId(),
                 'sku' => $product -> getSku(),
                 'name' => $product->getName(),
-                //'user' => $user[0]->getUsername()
             );
         
         return $json;
@@ -123,19 +110,36 @@ class ProductController extends Controller
         
         $em= $this  ->getDoctrine()  ->getManager();
         
-        $product = new Product;
-        $product->setSku($data->getSku());
-        $product->setName($data->getName());
-        $user->addProduct($product);
- 
+        //$product = new Product;
+        //$product->setSku($data->getSku());
+        //$product->setName($data->getName());
+
+        $product= $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findBy([
+            'sku' => $data->getSku()
+        ]);
+
+
+
+
+        if(!$product){
+            return "product does not exist";
+        }
+        else {
+
+        if($user->getProducts()->contains($product[0])){
+            return "product already attached";
+        }
+        else
+        {$user->addProduct($product[0]);
         
         $em = $this->getDoctrine()->getManager();
 
-        $em->persist($product);
+        //$em->persist($product);
         $em->persist($user);
         $em->flush();
  
-        return $this->json("product ". $product->getName()." saved");
+        return $this->json("product ". $product[0]->getSku()." attached");}
+    }
         //dump($product); die;
     }
 

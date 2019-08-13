@@ -43,7 +43,7 @@ class User extends BaseUser
 
     public function addProduct(Product $product)
   {
-    $this->products[] = $product;
+        $this->products[] = $product;
 
     return $this;
   }
