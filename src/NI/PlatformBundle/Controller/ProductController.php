@@ -87,8 +87,8 @@ class ProductController extends Controller
             'user'=>$user]
         );*/
 
-        print_r($user);
-        return "someText";
+        //print_r($user);
+        return $user->getProducts();
         //return $this->json($this->getUser()->getUsername());
     }
 
