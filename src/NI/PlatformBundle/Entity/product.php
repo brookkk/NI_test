@@ -37,7 +37,7 @@ class product
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="NI\UserBundle\Entity\User", cascade={"all"}, fetch="EAGER")
+     * @ORM\ManyToMany(targetEntity="NI\UserBundle\Entity\User", cascade={"persist"})
      */
     private $user;
 

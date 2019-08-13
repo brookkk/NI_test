@@ -31,29 +31,60 @@ class ProductController extends Controller
         
 
 
-        $em= $this  ->getDoctrine()  ->getManager();
-        $repository = $em  ->getRepository('NIPlatformBundle:product');
-        $listProducts = $repository->findAll();
+        $listProducts= $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findAll();
 
-        return $this->productToJson($listProducts);
+        
+         
+
+        $json_products = array();
+        
+
+        //print_r($listProducts);
+        $json_products = [];
+
+        foreach($listProducts as $product){
+            //print_r($product);
+            //print_r(json_encode($product));
+            //print_r($this->productToJson($product));
+            $json_products[] =$this->productToJson($product);
+        }
+
+         
+
+         return $json_products;
+         //return "toto";
     }
 
 
 
-    
-
-    public function productToJson($products)
+    /**
+     * @Get(
+     *     path = "/user",
+     *     name = "NI_user_show",
+     * )
+     */
+    public function showUserNameAction()
     {
-        $json_product = array();
-        foreach ($products  as $product){
-            $json_product[] =  [
+        
+
+
+        //return $this->json($this->getUser()->getUsername());
+        return json("testsss");
+    }
+
+    public function productToJson($product)
+    {
+        /*$user = $this->getDoctrine()->getRepository('NIUserBundle:User')->findBy([
+            'id' => $product->getUser() ,
+          ]);*/
+            $json =  array(
                 'id' => $product->getId(),
                 'sku' => $product -> getSku(),
                 'name' => $product->getName(),
-                'user' => $product->getUser()->getUsername()
-            ];
-        }
-        return $json_product;
+                //'user' => $user[0]->getUsername()
+            );
+        
+        return $json;
     }
 
 
