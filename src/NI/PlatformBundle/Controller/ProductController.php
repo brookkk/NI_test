@@ -87,8 +87,6 @@ class ProductController extends Controller
 
         $user = $this -> getUser();
 
-
-        
         $em= $this  ->getDoctrine()  ->getManager();
         
         $product= $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findBy([
@@ -161,6 +159,55 @@ class ProductController extends Controller
     {
         return $this->redirectToRoute('api_login_check', array('request'=>$request));
     }
+
+
+    /**
+     * @Rest\Put("/import_database")
+     * @Rest\View(StatusCode = 201)
+     */
+
+     public function importDatabaseAction()
+     {
+
+        //importing users
+        $users_file = fopen("imports/users", "r") or die("Unable to open users file!");
+
+        $users = array ();
+
+        while(!feof($users_file)) {
+            // a temp array to store the line that we get from the file
+            $temp_array = explode(",",fgets($users_file));
+            
+            $users[] = [
+                'id' => $temp_array[0],
+                'name' => $temp_array[1],
+                'email' => $temp_array[2],
+                'password' => $temp_array[3],
+            ];
+          }
+
+        //print_r($users);
+        foreach ($users as $user )
+          {
+              $bd_user = new User();
+              
+              $bd_user ->setId($user['id']);
+              $bd_user ->setUsername($user['name']);
+              $bd_user ->setEmail($user['email']);
+              $bd_user->setSalt("0tETSwKIch/ZJIb0wGaiYshUQsM.9ZipsfPsBMyXGfI");
+              $bd_user ->setPassword(trim($user['password'])."{0tETSwKIch/ZJIb0wGaiYshUQsM.9ZipsfPsBMyXGfI}");
+              $bd_user ->setEnabled(true);
+
+              $em = $this->getDoctrine()->getManager();
+              $em->persist($bd_user);
+              $em->flush();
+
+              
+          }
+        
+
+        return "toto";
+     }
 
 
     

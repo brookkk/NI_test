@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser; 
 use Symfony\Component\Validator\Constraints as Assert;
 use NI\PlatformBundle\Entity\Product as Product;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
  
 
