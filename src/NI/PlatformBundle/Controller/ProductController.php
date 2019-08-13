@@ -29,30 +29,14 @@ class ProductController extends Controller
     public function showProductAction()
     {
         
-
-
         $listProducts= $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findAll();
 
-        
-         
-
-        $json_products = array();
-        
-
-        //print_r($listProducts);
         $json_products = [];
 
         foreach($listProducts as $product){
-            //print_r($product);
-            //print_r(json_encode($product));
-            //print_r($this->productToJson($product));
             $json_products[] =$this->productToJson($product);
         }
-
-         
-
          return $json_products;
-         //return "toto";
     }
 
 
@@ -110,15 +94,9 @@ class ProductController extends Controller
         
         $em= $this  ->getDoctrine()  ->getManager();
         
-        //$product = new Product;
-        //$product->setSku($data->getSku());
-        //$product->setName($data->getName());
-
         $product= $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findBy([
             'sku' => $data->getSku()
         ]);
-
-
 
 
         if(!$product){
@@ -134,13 +112,45 @@ class ProductController extends Controller
         
         $em = $this->getDoctrine()->getManager();
 
-        //$em->persist($product);
         $em->persist($user);
         $em->flush();
  
         return $this->json("product ". $product[0]->getSku()." attached");}
     }
-        //dump($product); die;
+     }
+
+
+     /**
+     * @Rest\Delete("/user/product/{sku}")
+     */
+    public function detachProductFromUserAction($sku)
+    {
+        $product= $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findBy([
+            'sku' => $sku
+        ]);
+
+        if(!$product){
+            return "product does not exist";
+        }
+        else{
+        $user = $this->getUser();
+
+
+        if(!$user->getProducts()->contains($product[0])){
+            return "product already detached";
+        }
+        else{
+
+        $user->removeProduct($product[0]);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $em->persist($user);
+        $em->flush();
+
+        return "product removed";
+        }
+        }
     }
 
 
