@@ -80,27 +80,24 @@ class ProductController extends Controller
 
 
     /**
-     * @Rest\Post("/user/product")
+     * @Rest\Post("/user/product/{sku}")
      */
-    public function createAction(Request $request)
+    public function createAction($sku)
     {
 
-        //$user = $this->get('security.token_storage')->getToken();
         $user = $this -> getUser();
 
-        $prdt = $this->get('serializer')->serialize($request->query, 'json');
 
-        $data = $this->get('serializer')->deserialize($prdt, 'NI\PlatformBundle\Entity\product', 'json');
         
         $em= $this  ->getDoctrine()  ->getManager();
         
         $product= $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findBy([
-            'sku' => $data->getSku()
+            'sku' => $sku
         ]);
 
 
         if(!$product){
-            return "product does not exist";
+            return "404 Error: product does not exist";
         }
         else {
 
@@ -122,6 +119,7 @@ class ProductController extends Controller
 
      /**
      * @Rest\Delete("/user/product/{sku}")
+     * * @Rest\View(StatusCode = 201)
      */
     public function detachProductFromUserAction($sku)
     {
@@ -148,7 +146,7 @@ class ProductController extends Controller
         $em->persist($user);
         $em->flush();
 
-        return "product removed";
+        return "product detached";
         }
         }
     }
@@ -165,64 +163,7 @@ class ProductController extends Controller
     }
 
 
-    /**
-     * @Rest\Post("/auth2")
-     * @Rest\View(StatusCode = 201)
-     */
-    public function authenticateLoginAction(Request $request)
-    {
-        $user = $this->get('serializer')->serialize($request->query, 'json');
-        $user_array = json_decode($user, true);
-        //echo($user_array['username']);
-
-        //Méthode qui vérifie que l'utilisateur a les bons idntifiants
-        //en input : $user de type User ayant un "username" et "password"
-        //en output : si "good credentials" : un 'token' === l'heure actuelle transformée en un entier ( => unique)
-        // + l'objet "user" trouvé au niveau de la BD
-        // sinon "user non trouvé" ou "mdp erroné"
- 
-        $factory = $this->get('security.encoder_factory');
-
-        // pour vérifier si le user existe au niveau de la BD
-        $found = false;
-
-        // pour vérifier si le psw est correct pour le user
-        $good_psw=false;
-
-        // on vérifie l'existance d'un user avec l'identifiant "username"
-        $bd_user = $this->get('fos_user.user_manager')->findUserByUsername($user_array['username']);
-
-        //print_r($bd_user);
-
-        if($bd_user)
-        {
-            //on a trouvé un user avec l'idntifiant "username"
-            $found = true;
-            //on va encoder le psw de user (de l'input) et vérifier les deux psw encodés
-            $encoder = $factory->getEncoder($bd_user);
-            $pass=$user_array['password'];
-            $good_psw = $encoder->isPasswordValid($bd_user->getPassword(),$pass,$bd_user->getSalt());
-
-        }
-
-        //on crée le token à partir de DateTime()
-        $date = new \DateTime();
-        $token = $date->format('YmdHis');
- 
-        if(!$found)
-            return "user : not found";
-        else if(!$good_psw)
-            return "wrong password";
-        else{
-            $bd_user->setLastLogin($date);
-             //l'objet retour est le "token" + "user trouvé"
-        $retour = array('token'=> $token, 'user'=> array('username'=>$bd_user->getUsername(), 'email' => $bd_user->getEmail(),
-         'id'=>$bd_user->getId() ));
-            return $retour;}
-
-            //return $this->json("good");
- 
-    }
+    
 
 
 }
