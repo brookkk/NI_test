@@ -65,11 +65,31 @@ class ProductController extends Controller
      */
     public function showUserNameAction()
     {
-        
-
-
         return $this->json($this->getUser()->getUsername());
-        //return json("testsss");
+    }
+
+
+    /**
+     * @Get(
+     *     path = "/user/products",
+     *     name = "NI_user_show_products",
+     * )
+     */
+    public function showUserProductsAction()
+    {
+        $user = $this->getUser();
+
+        /*$db_user = $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findBy([
+            'id'=>$user->get]
+        );*/
+
+        /*$listProducts= $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findBy([
+            'user'=>$user]
+        );*/
+
+        print_r($user);
+        return "someText";
+        //return $this->json($this->getUser()->getUsername());
     }
 
     public function productToJson($product)
@@ -102,34 +122,20 @@ class ProductController extends Controller
         $data = $this->get('serializer')->deserialize($prdt, 'NI\PlatformBundle\Entity\product', 'json');
         
         $em= $this  ->getDoctrine()  ->getManager();
-        $repository = $em  ->getRepository('NIUserBundle:User');
-        /*$user =  $repository->findBy([
-            'id' => 1 ,
-          ]);*/
-
-         // print_r($user[0]);
-
-        //$user = new User;
-        //$user->setId(1);
-        //print_r($data);
+        
         $product = new Product;
         $product->setSku($data->getSku());
         $product->setName($data->getName());
-        $product->addUser($user);
-        //$form = $this->get('form.factory')->create(productType::class, $product);
-        //$form->submit($data);
+        $user->addProduct($product);
+ 
         
         $em = $this->getDoctrine()->getManager();
 
         $em->persist($product);
+        $em->persist($user);
         $em->flush();
-
-
-
-
  
- 
-        return $this->json("product saved");
+        return $this->json("product ". $product->getName()." saved");
         //dump($product); die;
     }
 

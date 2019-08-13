@@ -4,7 +4,6 @@ namespace NI\PlatformBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use NI\UserBundle\Entity\User as User;
 
 /**
  * product
@@ -37,10 +36,7 @@ class product
      */
     private $name;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="NI\UserBundle\Entity\User", cascade={"persist"})
-     */
-    private $users;
+   
 
 
     /**
@@ -101,29 +97,6 @@ class product
         return $this->name;
     }
 
-    /**
-     * Get the value of user
-     */ 
-    public function getUser()
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user)
-  {
-    $this->users[] = $user;
-
-    return $this;
-  }
-
-  public function removeUser(User $user)
-  {
-    $this->users->removeElement($user);
-  }
-
-  public function __construct()
-  {
-    $this->users = new ArrayCollection();
-  }
+    
 }
 
