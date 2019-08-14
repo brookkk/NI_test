@@ -170,7 +170,7 @@ class ProductController extends Controller
      {
 
         //importing users
-        /*
+        
         // we start by reading the "imports/users file
         $users_file = fopen("imports/users", "r") or die("Unable to open users file!");
         $users = array ();
@@ -202,7 +202,7 @@ class ProductController extends Controller
               $em->persist($bd_user);
               $em->flush();
           }
-          */
+          
 
 
 
