@@ -181,7 +181,7 @@ class ProductController extends Controller
                 'id' => $temp_array[0],
                 'name' => $temp_array[1],
                 'email' => $temp_array[2],
-                'password' => $temp_array[3],
+                'password' => trim($temp_array[3]),
             ];
           }
 
@@ -208,10 +208,10 @@ class ProductController extends Controller
 
 
 
-
+        
         //importing products
         
-        // we start by reading the "imports/users file
+        // reading the "imports/products file
         $products_file = fopen("imports/products", "r") or die("Unable to open users file!");
         $products = array ();
         while(!feof($products_file)) {
@@ -219,13 +219,13 @@ class ProductController extends Controller
             $temp_array = explode(",",fgets($products_file));
             $products[] = [
                 'sku' => $temp_array[0],
-                'name' => $temp_array[1],
+                'name' => trim($temp_array[1]),
             ];
           }
 
-        // $users is an array of this form  user ('id'=> id, 'name'=> name, 'email'=>email, 'password'=> psw)  
-        // we go through the users array to import them into the database by creating $bd_users objects and initialazing them
-        // for reasons of simplicity (simplifying import in mass), we use plain password, and mock the field "salt"  
+        // $products : array : ('sku'=> sku, 'name'=> name)  
+        // we go through the products array to import them into the database by creating $bd_products objects and initialazing them
+        
         foreach ($products as $product )
           {
               $bd_product = new product();
@@ -235,6 +235,49 @@ class ProductController extends Controller
 
               $em = $this->getDoctrine()->getManager();
               $em->persist($bd_product);
+              $em->flush();
+          }
+
+          
+
+
+
+          //importing products
+        
+        // we start by reading the "imports/users file
+        $history_file = fopen("imports/history", "r") or die("Unable to open users file!");
+        $histories = array ();
+        while(!feof($history_file)) {
+            // a temp array to store the line that we get from the file
+            $temp_array = explode(",",fgets($history_file));
+            
+
+            $histories[] = [
+                'user_id' => $temp_array[0],
+                'product_sku' => $temp_array[1],
+            ];
+            
+          }
+
+        // $users is an array of this form  user ('id'=> id, 'name'=> name, 'email'=>email, 'password'=> psw)  
+        // we go through the users array to import them into the database by creating $bd_users objects and initialazing them
+        // for reasons of simplicity (simplifying import in mass), we use plain password, and mock the field "salt"  
+        foreach ($histories as $history )
+        {
+              $user= $this->getDoctrine()->getRepository('NIUserBundle:User')->findBy([
+                //'id' => $history['user_id']
+                'id' => $history['user_id']
+            ]);
+            $product= $this->getDoctrine()->getRepository('NIPlatformBundle:product')->findBy([
+                'sku' => trim($history['product_sku'])
+            ]);
+            $bd_user = $user[0];
+            $bd_product = $product[0];
+            $bd_user->addProduct($bd_product);  
+              
+
+              $em = $this->getDoctrine()->getManager();
+              $em->persist($bd_user);
               $em->flush();
           }
       
